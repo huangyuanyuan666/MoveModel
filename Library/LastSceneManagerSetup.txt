@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Test.unity
+- path: Assets/Scenes/01.Move3DObj.unity
   isLoaded: 1
   isActive: 1

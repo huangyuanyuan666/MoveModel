@@ -12,19 +12,16 @@ public class AxisMouseEvent : MonoBehaviour
 
      void OnMouseEnter()
     {
-        //Debug.Log("enter");
         m_gameManager.SendMessage("MoseHoverEnter",gameObject.name);
     }
 
      void OnMouseDown()
     {
-        //Debug.Log("down");
         m_gameManager.SendMessage("MouseDown", gameObject.name);
     }
 
      void OnMouseExit()
     {
-        //Debug.Log("exit");
         m_gameManager.SendMessage("MouseHoverExis", gameObject.name);
     }
 

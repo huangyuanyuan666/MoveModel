@@ -19,7 +19,7 @@ public class MoveModel : MonoBehaviour
     //坐标轴
     Transform m_axis;
     //坐标轴颜色 分别对应x、y、z、选中轴
-    Color[] m_axisColors = new Color[] {Color.red,Color.green,Color.blue,Color.yellow };
+    Color[] m_axisColors = new Color[] { Color.red, Color.green, Color.blue, Color.yellow };
     //是否正在移动物体
     bool m_isMoveModel = false;
     //上一帧鼠标位置
@@ -38,14 +38,14 @@ public class MoveModel : MonoBehaviour
 
     void Update()
     {
-         if (Input.GetMouseButton(0) && m_isMoveModel)
+        if (Input.GetMouseButton(0) && m_isMoveModel)
         {
             MovingModel();
         }
         //移动完成
         else if (Input.GetMouseButtonUp(0) && m_isMoveModel)
         {
-          
+
             MoveComplete();
         }
 
@@ -73,37 +73,30 @@ public class MoveModel : MonoBehaviour
     {
         //鼠标在屏幕上的方向
         Vector3 mouseDir = Input.mousePosition - m_lastMousePos;
-        Vector3 start = Camera.main.ScreenToWorldPoint(m_lastMousePos);
-        Vector3 end = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 startWorld = Camera.main.transform.TransformPoint(start);
-        Vector3 endWorld = Camera.main.transform.TransformPoint(end);
-        Vector3 mouseWorldDir = endWorld - startWorld;
         Vector3 offset = Vector3.zero;
         Vector3 axisStart = Camera.main.WorldToScreenPoint(m_axis.position);
         switch (m_axisState)
         {
             case AxisState.X:
                 Transform x = m_axis.Find("X");
-                Vector3 screen = Camera.main.WorldToScreenPoint(x.forward+axisStart)-axisStart;
-                float similar=  Vector3.Dot(mouseWorldDir, x.forward);
+                Vector3 screenDir = Camera.main.WorldToScreenPoint(x.forward);
+                float similar = Vector3.Dot(mouseDir, screenDir);
                 offset = new Vector3(similar * Time.deltaTime * MOVE_SPEED, 0, 0);
-             
+
                 break;
             case AxisState.Y:
                 Transform y = m_axis.Find("Y");
-                 screen = Camera.main.WorldToScreenPoint(y.forward+axisStart)-axisStart;
-                similar = Vector3.Dot(mouseWorldDir, y.forward);
-                offset = new Vector3(0,similar * Time.deltaTime * MOVE_SPEED, 0);
+                screenDir = Camera.main.WorldToScreenPoint(y.forward);
+                similar = Vector3.Dot(mouseDir, screenDir);
+                offset = new Vector3(0, similar * Time.deltaTime * MOVE_SPEED, 0);
                 break;
             case AxisState.Z:
                 Transform z = m_axis.Find("Z");
-                 screen= Camera.main.WorldToScreenPoint(z.forward+axisStart)-axisStart;
-                
-                similar = Vector3.Dot(mouseWorldDir, z.forward);
-               // Debug.Log("mouseWorld==" + mouseWorld + "z forward==" + z.forward);
-                offset = new Vector3(0, 0,-similar * Time.deltaTime * MOVE_SPEED);
+                screenDir = Camera.main.WorldToScreenPoint(z.forward);
+                similar = Vector3.Dot(mouseDir, screenDir);
+                offset = new Vector3(0, 0, -similar * Time.deltaTime * MOVE_SPEED);
                 break;
-            default:break;
+            default: break;
         }
         m_model.position += offset;
         m_axis.position += offset;
@@ -194,7 +187,7 @@ public class MoveModel : MonoBehaviour
         }
     }
     #endregion
-    
+
 
     enum AxisState
     {
@@ -204,6 +197,3 @@ public class MoveModel : MonoBehaviour
         Idle
     }
 }
-
-//将单个轴forward转世界方向=》转屏幕方向 TODO 失败
-//将屏幕点转空间点=》求得空间向量=》直接与forward求相似
